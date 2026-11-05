@@ -1,8 +1,8 @@
-# Chinese Auction Management API — C# · ASP.NET Core · Entity Framework Core · SQL Server
+# Chinese Auction Management System — Angular · C# · ASP.NET Core · Entity Framework Core · SQL Server
 
-A REST API for running a **Chinese auction** (a prize raffle): donors contribute gifts, buyers purchase tickets for the gifts they want, and an admin runs a random draw for each gift and emails the winner automatically.
+A full-stack system for running a **Chinese auction** (a prize raffle): donors contribute gifts, buyers purchase tickets for the gifts they want, and an admin runs a random draw for each gift and emails the winner automatically.
 
-It's built with a **layered architecture** (Controllers → Business Logic → Data Access), using dependency injection, JWT authentication with role-based authorization, and Docker support.
+The client is built with **Angular**. The server is an ASP.NET Core REST API with a **layered architecture** (Controllers → Business Logic → Data Access), using dependency injection, JWT authentication with role-based authorization, and Docker support.
 
 ---
 
@@ -24,7 +24,8 @@ It's built with a **layered architecture** (Controllers → Business Logic → D
 
 | Layer | Technology |
 |---|---|
-| Framework | ASP.NET Core 7 Web API (C#) |
+| Client | Angular, TypeScript |
+| Server | ASP.NET Core 7 Web API (C#) |
 | Data | Entity Framework Core 7, SQL Server |
 | Auth | JWT Bearer, BCrypt.Net |
 | Mapping | AutoMapper |
@@ -37,6 +38,7 @@ It's built with a **layered architecture** (Controllers → Business Logic → D
 ## Architecture
 
 ```
+client/             # Angular front end
 server/
 ├── Controllers/    # HTTP endpoints (Auth, Gift, Category, Donor, Ticket, Lottery, Report, Mail)
 ├── BLL/            # Business logic services + interfaces
@@ -87,9 +89,19 @@ dotnet run
 
 Then open `http://localhost:5163/swagger`.
 
+### Client (Angular)
+
+```bash
+cd client
+npm install
+ng serve
+```
+
+Open `http://localhost:4200`.
+
 ### Configuration
 
-Set these values in `appsettings.Development.json` or as environment variables:
+`appsettings.json` contains placeholders only. Set real values with [user secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) (`dotnet user-secrets init`, then `dotnet user-secrets set "Jwt:Key" "<your-secret>"`) or with environment variables such as `Jwt__Key`:
 
 - `ConnectionStrings:DefaultConnection`
 - `Jwt:Key`, `Jwt:Issuer`, `Jwt:Audience`
