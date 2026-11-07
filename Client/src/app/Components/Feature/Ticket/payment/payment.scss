@@ -1,0 +1,704 @@
+// Luxury Payment Page Styles
+$primary: #D4AF37;
+$secondary: #2C2416;
+$accent: #1A1A1A;
+$light-bg: #F5F5F5;
+$light-border: #E8E8E8;
+$text-primary: #1A1A1A;
+$text-secondary: #666666;
+$text-light: #999999;
+$white: #FFFFFF;
+$success: #10B981;
+$error: #EF4444;
+$warning: #F59E0B;
+
+.payment-container {
+  min-height: 100vh;
+  // background: linear-gradient(135deg, #F5F5F5 0%, #FAFAFA 100%);
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-wrapper {
+  width: 100%;
+  max-width: 900px;
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: slideDown 0.5s ease-out;
+
+  .payment-title {
+    font-size: 2.5rem;
+    color: $text-primary;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .payment-subtitle {
+    font-size: 1rem;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+.payment-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  animation: fadeIn 0.6s ease-out;
+
+  @media (max-width: 768px) {
+    gap: 1.5rem;
+  }
+}
+
+// Order Summary Card
+.order-summary-card {
+  background: white;
+  border: 2px solid $primary;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(212, 175, 55, 0.1);
+
+  h3 {
+    color: $secondary;
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-top: 1px solid $light-border;
+    color: $text-primary;
+
+    &:first-child {
+      border-top: none;
+    }
+
+    .amount {
+      font-weight: 700;
+      color: $primary;
+      font-size: 1.3rem;
+    }
+  }
+}
+
+// Form Sections
+.form-section {
+  background: white;
+  border: 1px solid $light-border;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .section-title {
+    color: $secondary;
+    font-size: 1.25rem;
+    margin: 0 0 1.5rem 0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    i {
+      color: $primary;
+      font-size: 1.25rem;
+    }
+  }
+}
+
+// Form Row and Groups
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  input {
+    padding: 0.875rem 1rem !important;
+    border: 1px solid $light-border !important;
+    border-radius: 6px !important;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    color: $text-primary;
+
+    &:focus {
+      border-color: $primary !important;
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1) !important;
+    }
+
+    &::placeholder {
+      color: $text-light;
+    }
+
+    &.invalid {
+      border-color: $error !important;
+      background-color: rgba(239, 68, 68, 0.05);
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+      }
+    }
+  }
+
+  .error-text {
+    color: $error;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+
+    i {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+// Payment Methods
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.payment-method-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 1rem;
+  border: 2px solid $light-border;
+  border-radius: 8px;
+  background: white;
+  transition: all 0.3s ease;
+
+  input[type="radio"] {
+    cursor: pointer;
+    margin-right: 1rem;
+    width: 20px;
+    height: 20px;
+  }
+
+  .method-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+
+    i {
+      font-size: 1.5rem;
+      color: $primary;
+      min-width: 30px;
+      text-align: center;
+    }
+  }
+
+  .method-info {
+    flex: 1;
+
+    h3 {
+      margin: 0;
+      font-weight: 600;
+      color: $text-primary;
+      font-size: 1rem;
+    }
+
+    p {
+      margin: 0.25rem 0 0 0;
+      color: $text-secondary;
+      font-size: 0.85rem;
+    }
+  }
+
+  &.active {
+    border-color: $primary;
+    background: rgba(212, 175, 55, 0.05);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+  }
+
+  &:hover {
+    border-color: $primary;
+    background: rgba(212, 175, 55, 0.02);
+  }
+}
+
+// Card Input Wrapper
+.card-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    padding-right: 3.5rem !important;
+  }
+
+  .card-type {
+    position: absolute;
+    right: 1rem;
+    color: $primary;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+}
+
+.cvv-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    padding-right: 2.5rem !important;
+  }
+
+  .cvv-help {
+    position: absolute;
+    right: 1rem;
+    color: $primary;
+    cursor: help;
+    font-size: 1.1rem;
+  }
+}
+
+// Security Info
+.security-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(16, 185, 129, 0.05);
+  border-left: 4px solid $success;
+  border-radius: 4px;
+  color: $text-primary;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+
+  i {
+    color: $success;
+    font-weight: 600;
+  }
+}
+
+// Payment Actions
+.payment-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .cancel-btn {
+    min-width: 120px;
+  }
+
+  // Enhanced Pay Button Wrapper - Gold & Black Luxury Design
+  .pay-button-wrapper {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+
+    // Glow effect when form is valid - Gold glow
+    &.valid {
+      .pay-btn:not(:disabled) {
+        animation: payButtonGlow 2s ease-in-out infinite;
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.6), 
+                    0 0 60px rgba(212, 175, 55, 0.3),
+                    inset 0 0 20px rgba(212, 175, 55, 0.2);
+      }
+    }
+
+    .pay-btn {
+      width: 100%;
+      min-width: 180px;
+      padding: 0.875rem 2rem !important;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: linear-gradient(135deg, #D4AF37 0%, #C4941F 50%, #2C2416 100%) !important;
+      border: 2px solid #D4AF37 !important;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      color: #FFFFFF !important;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.6s ease;
+        z-index: 1;
+      }
+
+      &:hover:not(:disabled) {
+        &::before {
+          left: 100%;
+        }
+
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(212, 175, 55, 0.5),
+                    0 8px 16px rgba(44, 36, 22, 0.3),
+                    inset 0 0 15px rgba(255, 255, 255, 0.1);
+        letter-spacing: 2.5px;
+        background: linear-gradient(135deg, #E8C856 0%, #D4AF37 50%, #3D3220 100%) !important;
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(212, 175, 55, 0.4),
+                    inset 0 0 8px rgba(0, 0, 0, 0.2);
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background: linear-gradient(135deg, #A8A0A0 0%, #707070 100%) !important;
+        box-shadow: none;
+        border-color: #808080 !important;
+        transform: none;
+        color: #CCCCCC !important;
+        text-shadow: none;
+
+        &:hover {
+          transform: none;
+          box-shadow: none;
+        }
+      }
+
+      &.processing {
+        pointer-events: none;
+      }
+
+      // Icon animations
+      i {
+        display: inline-block;
+        transition: transform 0.3s ease;
+
+        &.pi-spinner {
+          animation: spin 1s linear infinite;
+        }
+
+        &.pi-lock {
+          animation: pulseIcon 1s ease-in-out infinite;
+        }
+      }
+
+      :ng-deep .p-button-label {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+
+    // Form Status Indicator
+    .form-status-indicator {
+      width: 100%;
+      padding: 0.625rem 1rem;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      .status-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        min-height: 24px;
+
+        &.valid {
+          color: #D4AF37;
+          background: rgba(212, 175, 55, 0.15);
+          border: 2px solid rgba(212, 175, 55, 0.5);
+          animation: slideInUp 0.4s ease-out;
+          font-weight: 600;
+
+          i {
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #D4AF37;
+          }
+        }
+
+        &.invalid {
+          color: $error;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.3);
+
+          i {
+            animation: shake 0.5s ease-in-out;
+          }
+        }
+
+        i {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Enhanced Animations - Gold Glow Effect
+@keyframes payButtonGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3),
+                0 0 20px rgba(212, 175, 55, 0.1),
+                inset 0 0 8px rgba(212, 175, 55, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.6),
+                0 0 60px rgba(212, 175, 55, 0.3),
+                inset 0 0 20px rgba(212, 175, 55, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3),
+                0 0 20px rgba(212, 175, 55, 0.1),
+                inset 0 0 8px rgba(212, 175, 55, 0.05);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseIcon {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+// Trust Badges
+.trust-badges {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid $light-border;
+
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+  }
+
+  .badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    color: $text-secondary;
+    font-size: 0.85rem;
+
+    i {
+      color: $primary;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+// Animations
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .payment-header {
+    margin-bottom: 1.5rem;
+
+    .payment-title {
+      font-size: 1.75rem;
+    }
+
+    .payment-subtitle {
+      font-size: 0.9rem;
+    }
+  }
+
+  .form-section {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Dark Mode Support
+@media (prefers-color-scheme: dark) {
+  .payment-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  }
+
+  .form-section,
+  .order-summary-card {
+    background: #2d2d2d;
+    border-color: #444;
+  }
+
+  .order-summary-card {
+    border-color: $primary;
+  }
+
+  input {
+    background: #3d3d3d !important;
+    color: $white !important;
+    border-color: #444 !important;
+
+    &::placeholder {
+      color: #999 !important;
+    }
+
+    &:focus {
+      background: #3d3d3d !important;
+    }
+  }
+
+  label,
+  .section-title {
+    color: $white;
+  }
+
+  .payment-method-option {
+    background: #3d3d3d;
+    border-color: #444;
+
+    &.active {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: $primary;
+    }
+  }
+}

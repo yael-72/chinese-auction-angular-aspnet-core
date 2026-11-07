@@ -1,0 +1,150 @@
+<body>
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <!-- Floating decorative elements -->
+      <div class="floating-gift floating-1">🎁</div>
+      <div class="floating-gift floating-2">💎</div>
+      <div class="floating-gift floating-3">✨</div>
+      <div class="floating-gift floating-4">🎊</div>
+
+      <!-- Logo -->
+      <div class="logo-container">
+        <img src="/full-logo.png" alt="לא רק סינית" class="hero-logo">
+        <div class="logo-glow"></div>
+      </div>
+
+      <!-- Main Title -->
+      <h1 class="hero-title">
+        <span class="gold-text">לא רק סינית</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="hero-subtitle">ברוכים הבאים לחווית קנייה בלתי נשכחת</p>
+
+      <!-- Description -->
+      <div class="hero-description">
+        <p class="description-text">
+          המקום שלך לגלות מתנות מהממות במחירים עולמיים. 
+          אנחנו מביאים לך את המוצרים הטובים ביותר ישירות מהעולם בהנחות בלתי מאומתות.
+        </p>
+      </div>
+
+      <!-- Countdown Timer Section -->
+      <div class="countdown-section">
+        <div class="countdown-label">
+          <p class="timer-warning">⏰ המכירה תסגר בעוד:</p>
+        </div>
+
+        <div class="countdown-container">
+          <div class="countdown-item">
+            <div class="countdown-value">{{ seconds }}</div>
+            <div class="countdown-label-small">שניות</div>
+          </div>
+
+          <div class="countdown-separator">:</div>
+
+          <div class="countdown-item">
+            <div class="countdown-value">{{ minutes }}</div>
+            <div class="countdown-label-small">דקות</div>
+
+          </div>
+
+          <div class="countdown-separator">:</div>
+
+          <div class="countdown-item">
+            <div class="countdown-value">{{ hours }}</div>
+            <div class="countdown-label-small">שעות</div>
+          </div>
+
+          <div class="countdown-separator">:</div>
+
+          <div class="countdown-item">
+            <div class="countdown-value">{{ days }}</div>
+            <div class="countdown-label-small">ימים</div>
+
+          </div>
+        </div>
+
+        <p class="countdown-message">אל תפספסו! זה סיכוי נדיר לקנות מתנות בעלות גבוהה במחירים מדהימים</p>
+      </div>
+
+      <!-- CTA Button -->
+      <div class="cta-section">
+        <a routerLink="/gift" class="cta-button">
+          <i class="pi pi-gift"></i>
+          התחל לרכוש עכשיו
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="features-container">
+      <div class="section-header">
+        <h2 class="section-title">למה לבחור בנו?</h2>
+        <p class="section-subtitle">כל מה שאתה צריך כדי לעשות רכישה מדהימה</p>
+      </div>
+
+      <div class="features-grid">
+        <div *ngFor="let feature of features; let i = index" 
+             class="feature-card" 
+             [style.animation-delay]="i * 0.1 + 's'">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+          <div class="feature-shine"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="about-container">
+      <div class="about-content">
+        <h2 class="about-title">אודות הפלטפורמה שלנו</h2>
+        <div class="about-text-container">
+          <p class="about-text">
+            <strong>לא רק סינית</strong> היא פלטפורמה מתקדמת לקנייה של מתנות פרימיום. 
+            אנחנו משלבים טכנולוגיה עדכנית עם חוויית משתמש מחורמנית ומקצועית.
+          </p>
+          <p class="about-text">
+            עם מערכת תשלום בטוחה, משלוח מהיר, ותמיכה בעברית מלאה, אנחנו כאן כדי להפוך 
+            את קנייתך לחוויה נעימה ובטוחה.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-stats">
+        <div class="stat-item">
+          <div class="stat-number">1000+</div>
+          <div class="stat-label">מתנות זמינות</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">10,000+</div>
+          <div class="stat-label">לקוחות מסונים</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">שביעות רצון</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA Section -->
+  <section class="final-cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">מוכנים להתחיל?</h2>
+      <p class="cta-description">הצטרפו לאלפים של קונים מרוצים וגלו מתנות מדהימות היום</p>
+      <!-- <a routerLink="/gift" class="cta-button-large">
+        <i class="pi pi-shopping-cart"></i>
+        עבור לחנות
+      </a> -->
+    </div>
+  </section>
+</div>
+</body>

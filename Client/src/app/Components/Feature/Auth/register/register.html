@@ -1,0 +1,51 @@
+<p-toast></p-toast>
+<div class="login-container">
+    <div class="login-box">
+        <h1>צור חשבון</h1>
+        <div class="subtitle">הצטרף לקהילת ההגרלה שלנו</div>
+
+        <form [formGroup]="regFrm">
+            <div class="form-group">
+                <label for="name">שם מלא</label>
+                <input id="name" type="text" placeholder="הזן את שמך המלא" formControlName="name" />
+                <p *ngIf="regFrm.controls['name'].invalid && (regFrm.controls['name'].dirty || regFrm.controls['name'].touched)" class="error-input">שדה חובה </p>
+            </div>
+
+            <div class="form-group">
+                <label for="username">שם משתמש</label>
+                <input id="username" type="text" placeholder="בחר שם משתמש" formControlName="userName" />
+                <p *ngIf="regFrm.controls['userName'].invalid && (regFrm.controls['userName'].dirty || regFrm.controls['userName'].touched)" class="error-input">שדה חובה </p>
+            </div>
+
+            <div class="form-group">
+                <label for="email">אימייל</label>
+                <input id="email" type="email" placeholder="הזן את כתובת האימייל שלך" formControlName="email" />
+                <p *ngIf="regFrm.controls['email'].invalid && (regFrm.controls['email'].dirty || regFrm.controls['email'].touched)" class="error-input">שדה חובה </p>
+                <p *ngIf="regFrm.controls['email'].invalid && (regFrm.controls['email'].dirty || regFrm.controls['email'].touched) && regFrm.controls['email'].errors?.['email']" class="error-input">כתובת אימייל לא תקינה</p>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">טלפון</label>
+                <input id="phone" type="tel" placeholder="הזן את מספר הטלפון שלך" formControlName="phone" />
+                <p *ngIf="regFrm.controls['phone'].invalid && (regFrm.controls['phone'].dirty || regFrm.controls['phone'].touched)" class="error-input">שדה חובה </p>
+                <p *ngIf="regFrm.controls['phone'].invalid && (regFrm.controls['phone'].dirty || regFrm.controls['phone'].touched) && regFrm.controls['phone'].errors?.['pattern']" class="error-input">מספר טלפון לא תקין</p>
+            </div>
+
+            <div class="form-group">
+                <label for="password">סיסמה</label>
+                <input id="password" type="password" placeholder="צור סיסמה" formControlName="password" />
+                <p *ngIf="regFrm.controls['password'].invalid && (regFrm.controls['password'].dirty || regFrm.controls['password'].touched)" class="error-input">שדה חובה </p>
+                <p *ngIf="regFrm.controls['password'].invalid && (regFrm.controls['password'].dirty || regFrm.controls['password'].touched) && regFrm.controls['password'].errors?.['minlength']" class="error-input">הסיסמה חייבת להכיל לפחות 4 תווים</p>
+            </div>
+
+            <p-button label="צור חשבון" icon="pi pi-user-plus" styleClass="gold-btn" (click)="register()"
+                [disabled]="!regFrm.valid"></p-button>
+        </form>
+
+        <div class="or-divider">
+            <b>או</b>
+        </div>
+        <p-button label="חזור להתחברות" icon="pi pi-arrow-left" styleClass="gold-btn"
+            (click)="moveToLogin()"></p-button>
+    </div>
+</div>

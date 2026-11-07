@@ -1,0 +1,31 @@
+
+<nav class="luxury-navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand" (click)="navigateHome()" style="cursor: pointer;">
+      <div class="navbar-logo">
+        <img src="/full-logo.png" alt="לא רק סינית">
+      </div>
+    </div>
+
+    <div class="navbar-menu">
+      <div class="custom-nav-links">
+        <a *ngFor="let item of items"
+           [routerLink]="item.routerLink"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+           class="p-menuitem-link">
+          <span [class]="item.icon" *ngIf="item.icon" class="itemIcon"></span>
+          <span>{{ item.label }}</span>
+        </a>
+      </div>
+    </div>
+
+    <div *ngIf="loggedIn && user" class="navbar-user" (click)="profileMenu.toggle($event)">
+      <span class="user-name">{{ user.name }}</span>
+      <div class="user-avatar">{{ (user.name || '').substring(0, 1) | uppercase }}</div>
+      <p-menu #profileMenu [model]="userMenuItems" [popup]="true"></p-menu>
+    </div>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>

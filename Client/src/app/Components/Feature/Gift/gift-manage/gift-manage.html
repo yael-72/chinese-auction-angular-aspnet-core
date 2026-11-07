@@ -1,0 +1,196 @@
+<p-toast />
+<!-- <p-confirmDialog /> -->
+<body>
+<p-confirmpopup></p-confirmpopup>
+<div class="card">
+    <p-toast />
+    <p-toolbar styleClass="mb-4">
+        <ng-template #center>
+            <div class="flex align-items-center gap-3">
+                <p-button label="New" icon="pi pi-plus" (onClick)="openNew()"></p-button>
+                <p-button severity="danger" label="Delete All" icon="pi pi-trash" outlined
+                    (onClick)="deleteAllGifts()"></p-button>
+            </div>
+        </ng-template>
+        <ng-template #start>
+            <p-button size="small" [rounded]="true" (click)="showCategoryDialog()" label="ניהול קטגוריות" />
+        </ng-template>
+
+        <ng-template #end>
+            <div class="flex align-items-center gap-2">
+                <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import"
+                    auto customUpload class="inline-block"
+                    [chooseButtonProps]="{ severity: 'secondary' }"></p-fileUpload>
+                <p-button label="Export" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV()"></p-button>
+            </div>
+        </ng-template>
+    </p-toolbar>
+
+    <!-- Search filters - always visible -->
+    <div class="card mb-3">
+        <div class="flex align-items-center justify-content-between flex-wrap gap-3">
+            <h3 class="m-0">ניהול מתנות</h3>
+
+            <div class="flex align-items-center gap-3 flex-wrap">
+                <p-iconField iconPosition="left" class="w-full sm:w-20rem">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText [(ngModel)]="searchName"
+                        (input)="searchGiftByName(searchName)"
+                        placeholder="חפש לפי שם..." class="w-full" />
+                </p-iconField>
+
+                <p-iconField iconPosition="left" class="w-full sm:w-20rem">
+                    <p-inputIcon styleClass="pi pi-user" />
+                    <input type="text" pInputText [(ngModel)]="searchDonor"
+                        (input)="searchGiftByDonor(searchDonor)"
+                        placeholder="חפש לפי תורם..." class="w-full" />
+                </p-iconField>
+
+                <p-iconField iconPosition="left" class="w-full sm:w-20rem">
+                    <p-inputIcon styleClass="pi pi-shopping-cart" />
+                    <input type="number" pInputText [(ngModel)]="searchBuyers"
+                        (input)="searchGiftByBuyers(searchBuyers)"
+                        placeholder="חפש לפי מספר קונים..." class="w-full" />
+                </p-iconField>
+
+                <p-button label="Reset" icon="pi pi-times" severity="secondary" 
+                    (onClick)="resetFilters()"></p-button>
+            </div>
+        </div>
+    </div>
+
+    <h4 *ngIf="Gifts.length==0">לא נמצאו מתנות</h4>
+
+    <p-table *ngIf="Gifts.length>0" #dt [value]="Gifts" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['name', 'category', 'status']" [tableStyle]="{ 'min-width': '75rem' }"
+        [(selection)]="selectedGifts" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} gifts" [showCurrentPageReport]="true">
+        <ng-template #caption>
+        </ng-template>
+        <ng-template #header>
+            <tr>
+                <!-- <th style="width: 3rem">
+                    <p-tableHeaderCheckbox />
+                </th> -->
+                <th pSortableColumn="id">קוד <p-sortIcon field="id" /></th>
+                <th pSortableColumn="name" style="min-width:16rem">שם <p-sortIcon field="name" /></th>
+                <th>תמונה</th>
+                <th pSortableColumn="price">מחיר <p-sortIcon field="price" /></th>
+                <th pSortableColumn="price">תורם <p-sortIcon field="price" /></th>
+                <th pSortableColumn="category">קטגוריה <p-sortIcon field="category" /></th>
+                <!-- <th pSortableColumn="rating">Rating <p-sortIcon field="rating" /></th> -->
+                <th style="min-width: 8rem"></th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-gift>
+            <tr>
+                <!-- <td>
+                    <p-tableCheckbox [value]="gift" />
+                </td> -->
+                <td>{{ gift.id }}</td>
+                <td>{{ gift.name }}</td>
+                <td>
+                    <img [src]="gift.image" [alt]="gift.name" style="width: 64px" class="shadow-2 border-round" />
+                </td>
+                <td>{{ gift.price | currency: 'USD' }}</td>
+                <td>{{ gift.donor.name }}</td>
+                <td>{{ gift.category.name }}</td>
+                <!-- <td>
+                    <p-rating [(ngModel)]="gift.rating" [readonly]="true" />
+                </td> -->
+                <td>
+                    <div class="flex align-items-center gap-2">
+                        <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true"
+                            (click)="editGift(gift)"></p-button>
+                        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                            (click)="deleteGift(gift)"></p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog [(visible)]="GiftDialog" [style]="{ width: '420px'}" [header]="isEditMode ? 'עדכון מתנה' : 'הוספת מתנה חדשה'" [modal]="true"
+        styleClass="p-fluid">
+        <ng-template #content>
+            <form [formGroup]="giftForm">
+                <div class="mb-4 flex justify-content-center">
+                    <img class="Gift-image" [src]="giftForm.get('image')?.value || 'logo.png'"
+                        [alt]="giftForm.get('name')?.value || 'image'" />
+                </div>
+                <div class="field mb-4">
+                    <label for="name" class="block font-bold mb-2">שם</label>
+                    <input type="text" pInputText id="name" formControlName="name" required autofocus />
+                    <small class="error-input block mt-1" *ngIf="giftForm.get('name')?.invalid && (giftForm.get('name')?.dirty || giftForm.get('name')?.touched)">שדה חובה</small>
+                </div>
+
+                <div class="field mb-4">
+                    <label for="description" class="block font-bold mb-2">תאור</label>
+                    <textarea id="description" pTextarea formControlName="description" rows="3"
+                        class="w-full"></textarea>
+                </div>
+
+                <div class="field mb-4">
+                    <label class="block font-bold mb-3" for="category">קטגוריה</label>
+                    <p-select id="category" formControlName="category" [options]="categories"
+                        optionLabel="name"></p-select>
+                    <small class="error-input block mt-1" *ngIf="giftForm.get('category')?.invalid && (giftForm.get('category')?.dirty || giftForm.get('category')?.touched)">שדה חובה</small>
+                </div>
+
+                <div class="field mb-4">
+                    <label for="donor" class="block font-bold mb-2">תורם</label>
+                    <p-select id="donor" formControlName="donor" [options]="donors" optionLabel="name"
+                        dataKey="id"></p-select>
+                    <small class="error-input block mt-1" *ngIf="giftForm.get('donor')?.invalid && (giftForm.get('donor')?.dirty || giftForm.get('donor')?.touched)">שדה חובה</small>
+                </div>
+
+                <div class="field mb-4">
+                    <label for="price" class="block font-bold mb-2">מחיר</label>
+                    <p-inputnumber id="price" formControlName="price" mode="currency" currency="USD" locale="en-US" />
+                    <small class="error-input block mt-1" *ngIf="giftForm.get('price')?.invalid && (giftForm.get('price')?.dirty || giftForm.get('price')?.touched)">שדה חובה</small>
+                </div>
+
+                <div class="field mb-4">
+                    <label for="image" class="block font-bold mb-2">תמונה</label>
+                    <input type="text" pInputText id="image" formControlName="image" required autofocus />
+                    <small class="error-input block mt-1" *ngIf="giftForm.get('image')?.invalid && (giftForm.get('image')?.dirty || giftForm.get('image')?.touched)">שדה חובה</small>
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #footer>
+            <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
+            <p-button label="Save" icon="pi pi-check" (click)="saveGift()" [disabled]="!giftForm.valid" />
+        </ng-template>
+
+    </p-dialog>
+
+<p-dialog [(visible)]="categoryDialog" header="ניהול קטגוריות" position="topleft" [modal]="true" [style]="{ width: '25rem' }">
+        <div class="flex items-center gap-4 mb-4">
+                    <label for="category" class="font-semibold w-24">הוסף קטגוריה</label>
+                    <input pInputText id="category" class="flex-auto" autocomplete="off" [(ngModel)]="categoryName"/>
+                    <p-button [disabled]="categoryName =='' || categoryName == null" label="שמירה" (click)="addCategory()" />
+                </div>
+                 <div class="card">
+                    <p-table [value]="categories" [tableStyle]="{ 'min-width': '10rem' }">
+                        <ng-template #header>
+                            <tr>
+                                <th>קטגוריה</th>
+                                <th></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-cat>
+                            <tr>
+                                <td>{{ cat.name }}</td>
+                                <td> 
+                                    <!-- <p-confirmpopup></p-confirmpopup> -->
+                                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+                                    (click)="deleteCategory($event,cat.id)" />
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+    </p-dialog>
+</div>
+</body>

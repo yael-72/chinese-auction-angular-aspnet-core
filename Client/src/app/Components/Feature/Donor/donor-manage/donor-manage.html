@@ -1,0 +1,138 @@
+<body>
+<!-- Header with New Button -->
+<div class="donor-header">
+    <div class="header-content">
+        <h1 class="header-title">ניהול תורמים</h1>
+        <p-button label="תורם חדש" icon="pi pi-plus" class="new-button" (click)="openNew()" severity="warn" />
+    </div>
+</div>
+
+<!-- Search section - always visible -->
+<div class="card mb-3 search-card">
+    <div class="search-wrapper">
+        <div class="search-input-wrapper">
+            <i class="pi pi-search search-icon"></i>
+            <input pInputText type="text" [(ngModel)]="searchName" 
+                (input)="searchDonorByName(searchName)" 
+                placeholder="חפש לפי שם תורם..." 
+                class="search-input" />
+        </div>
+        <p-button label="אפס" icon="pi pi-times" severity="secondary" 
+            (onClick)="resetSearch()" [outlined]="true" class="reset-button"></p-button>
+    </div>
+</div>
+
+<div class="card table-card">
+    <p-table
+        #dt2
+        [value]="list$"
+        dataKey="id"
+        [rows]="10"
+        [loading]="loading"
+        [paginator]="true"
+        [globalFilterFields]="['name']"
+        styleClass="donor-table"
+        style="direction: rtl;"
+            >
+        <ng-template #caption>
+        </ng-template>
+        <ng-template #header>
+            <tr class="table-header-row">
+                <th style="width:25%" class="table-header-cell">שם</th>
+                <th style="width:25%" class="table-header-cell">דוא"ל</th>
+                <th style="width:15%" class="table-header-cell">טלפון</th>
+                <th style="width:15%" class="table-header-cell">מדינה</th>
+                <th style="width:20%" class="table-header-cell text-center">פעולות</th>
+            </tr>
+          
+        </ng-template>
+        <ng-template #body let-donor>
+            <tr class="table-data-row">
+                <td class="table-data-cell">
+                    <span class="donor-name">{{ donor.name }}</span>
+                </td>
+                <td class="table-data-cell">
+                    <span class="donor-email">{{ donor.email }}</span>
+                </td>
+                <td class="table-data-cell">
+                    <span class="donor-phone">{{ donor.phone }}</span>
+                </td>
+                <td class="table-data-cell">
+                    <span class="donor-country">{{ donor.country }}</span>
+                </td>
+                <td class="table-data-cell actions-cell">
+                    <div class="action-buttons">
+                        <p-button 
+                            icon="pi pi-gift" 
+                            severity="info" 
+                            [rounded]="true" 
+                            [outlined]="true" 
+                            pTooltip="הצג מתנות"
+                            tooltipPosition="top"
+                            (click)="getGifts(donor.name)"/>
+                        <p-button 
+                            icon="pi pi-pencil" 
+                            [rounded]="true" 
+                            [outlined]="true" 
+                            pTooltip="עדכן תורם"
+                            tooltipPosition="top"
+                            (click)="editDonor(donor)" />
+                        <p-button 
+                            icon="pi pi-trash" 
+                            severity="danger" 
+                            [rounded]="true" 
+                            [outlined]="true" 
+                            pTooltip="מחק תורם"
+                            tooltipPosition="top"
+                            (click)="deleteDonor(donor)" />
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="5" class="empty-message">לא נמצאו תורמים</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<p-confirmDialog></p-confirmDialog>
+
+<p-dialog [(visible)]="updateDialog" [style]="{ width: '450px' }" style="direction: rtl;" [header]="isEditMode ? 'עדכון תורם' : 'הוספת תורם חדש'" [modal]="true">
+    <ng-template #content>
+        <form [formGroup]="donorForm">
+            <div class="flex flex-col gap-6">
+                <div class="field">
+                    <label for="name" class="block font-bold mb-3">שם</label>
+                    <input type="text" pInputText id="name" formControlName="name" required autofocus fluid />
+                    <p *ngIf="donorForm.get('name')?.invalid && (donorForm.get('name')?.dirty || donorForm.get('name')?.touched)" class="error-input">שדה חובה</p>
+                </div>
+                <div class="field">
+                    <label for="email" class="block font-bold mb-3">דוא"ל</label>
+                    <input type="email" pInputText id="email" formControlName="email" required autofocus fluid />
+                    <p *ngIf="donorForm.get('email')?.invalid && (donorForm.get('email')?.dirty || donorForm.get('email')?.touched)" class="error-input">שדה חובה</p>
+                    <p *ngIf="donorForm.get('email')?.errors?.['email'] && (donorForm.get('email')?.dirty || donorForm.get('email')?.touched)" class="error-input">כתובת אימייל לא תקינה</p>
+                </div>
+                <div class="field">
+                    <label for="phone" class="block font-bold mb-3">טלפון</label>
+                    <input type="tel" pInputText id="phone" formControlName="phone" autofocus fluid />
+                    <p *ngIf="donorForm.get('phone')?.invalid && (donorForm.get('phone')?.dirty || donorForm.get('phone')?.touched)" class="error-input">שדה חובה</p>
+                    <p *ngIf="donorForm.get('phone')?.errors?.['pattern'] && (donorForm.get('phone')?.dirty || donorForm.get('phone')?.touched)" class="error-input">מספר טלפון לא תקין</p>
+                </div>
+                <div class="field">
+                    <label for="country" class="block font-bold mb-3">מדינה</label>
+                    <input type="text" pInputText id="country" formControlName="country" autofocus fluid />
+                    <p *ngIf="donorForm.get('country')?.invalid && (donorForm.get('country')?.dirty || donorForm.get('country')?.touched)" class="error-input">שדה חובה</p>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button label="ביטול" icon="pi pi-times" text (click)="hideDialog()" />
+        <p-button label="שמירה" icon="pi pi-check" (click)="saveDonor()" [disabled]="!donorForm.valid" />
+    </ng-template>
+</p-dialog>
+</body>
+
+        

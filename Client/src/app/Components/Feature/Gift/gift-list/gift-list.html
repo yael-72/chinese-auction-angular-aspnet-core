@@ -1,0 +1,258 @@
+<div *ngIf="!loggedIn"> עליך להתחבר כדי להתחיל לרכוש כרטיסים </div>
+
+<body>
+<p-inputgroup class="searchDonor">
+    <p-inputgroup-addon>
+        <i class="pi pi-user"></i>
+    </p-inputgroup-addon>
+    <input (keyup)="filter()" pInputText [(ngModel)]="donorName" placeholder="תורם" />
+</p-inputgroup>
+<div class="flex gap-3 align-items-center mt-3 mb-3" id="sortAndAdmin">
+    <p-select styleClass="w-14rem" placeholder="מיון לפי..." [(ngModel)]="sortBy" (ngModelChange)="refresh()"
+        [options]="sortOptions" optionLabel="label" optionValue="value" showClear="true"></p-select>
+    <p-button *ngIf="loggedIn && user?.role=='Admin'" label="הגרל הכל" variant="outlined" icon="pi pi-play"
+        (click)="runAllLotteries()" severity="help"></p-button>
+    <div *ngIf="loggedIn && user?.role=='Admin'" class="flex gap-2">
+        <p-button label="דוח זוכים" icon="pi pi-download" variant="outlined"
+            (click)="downloadWinnersReport()"></p-button>
+        <p-button label="דוח מכירות" icon="pi pi-download" variant="outlined"
+            (click)="downloadSalesReport()"></p-button>
+    </div>
+</div>
+
+<p-dataview #dv [value]="(list$ | async) ?? []" [layout]="layout">
+    <!-- <ng-template #header>
+        <div class="flex justify-content-end">
+            <p-selectbutton [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
+                <ng-template #item let-item>
+                    <i class="pi" [ngClass]="{ 'pi-bars': item === 'list', 'pi-table': item === 'grid' }"></i>
+                </ng-template>
+            </p-selectbutton>
+        </div>
+    </ng-template> -->
+    <!-- תצוגת רשימה -->
+    <ng-template #list let-items>
+        <div class="grid">
+            <div *ngFor="let item of items; let first = first" class="col-12">
+                <div class="flex flex-column md:flex-row align-items-center p-5 gap-5 neon-card list-card"
+                    [ngClass]="{ 'border-top-1 border-200': !first }">
+                    <div class="sparkles" aria-hidden="true"></div>
+                    <div class="md:w-12rem relative flex-shrink-0">
+                        <img class="block mx-auto border-round w-full" [alt]="item.name" [src]="item.image" />
+                    </div>
+                    <div class="flex flex-column md:flex-row justify-content-between align-items-center flex-1 gap-4">
+                        <div class="flex flex-column align-items-center md:align-items-start gap-3">
+                            <span class="font-medium text-secondary text-sm">{{ item.category.name }}</span>
+                            <div class="text-2xl font-bold mt-1">{{ item.name }}</div>
+
+                            <div class="surface-100 border-round-3xl p-1">
+                                <div
+                                    class="surface-0 flex align-items-center gap-2 py-1 px-2 shadow-1 border-round-3xl">
+                                    <i class="pi pi-heart text-pink-500"></i>
+                                    <span class="text-900 font-medium text-sm">בנדיבות: {{ item.donor.name }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="flex flex-wrap gap-2 md:gap-3">
+                            <div *ngIf="item.winnerId!=null" class="surface-100 border-round-3xl p-1">
+                                <div class="surface-0 flex align-items-center gap-2 py-2 px-3 shadow-1 border-round-3xl"
+                                    style="font-size: 1.1rem; font-weight: 800; min-height: 40px;">
+                                    <span class="text-900 font-medium">הוגרל</span>
+                                    <i class="pi pi-check-circle text-pink-500" style="font-size: 1.2rem;"></i>
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="item.amount>1" class="surface-100 border-round-3xl p-1">
+                                <div class="surface-0 flex align-items-center gap-2 py-1 px-2 shadow-1 border-round-3xl">
+                                    <span class="text-900 font-medium text-sm">{{ item.amount }} זוכים</span>
+                                    <i class="pi pi-gift text-pink-500"></i>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="flex flex-column md:align-items-end gap-5">
+                            <span class="text-xl font-semibold">₪ {{ item.price }}</span>
+                            <div *ngIf="item.winner" class="winner-display">
+                                <div class="winner-decor">
+                                    <span class="crown-emoji">👑</span>
+                                    <div>
+                                        <div class="winner-name-spectacular">{{ item.winner.name }}</div>
+                                        <div class="winner-sub">@{{ item.winner.userName }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-row-reverse md:flex-row gap-2">
+                                <p-button icon="pi pi-heart" [outlined]="true"
+                                    (click)="$event.stopPropagation()"></p-button>
+                                <p-button *ngIf="!loggedIn || user?.role=='Buyer' && item.winnerId==null"
+                                    icon="pi pi-shopping-cart" label="הוספה לסל" [disabled]="!loggedIn" class="flex-1"
+                                    (click)="addToBasket(item.id); $event.stopPropagation()"></p-button>
+                                <p-button *ngIf="loggedIn && user?.role=='Admin' && item.winnerId==null"
+                                    icon="pi pi-trophy" label="הגרל" [disabled]="!loggedIn"
+                                    (click)="runLottery(item.id); $event.stopPropagation()" class="flex-1"></p-button>
+
+                                <p-button *ngIf="loggedIn && user?.role=='Admin'"
+                                    (click)="showDrawer(item); $event.stopPropagation()" label="רוכשים"
+                                    icon="pi pi-arrow-left" />
+                                <p-button *ngIf="loggedIn && item.winnerId!=null"
+                                    (click)="showWinners(item); $event.stopPropagation()" label="זוכים"
+                                    icon="pi pi-trophy" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <!-- תצוגת בלוקים -->
+    <ng-template #grid let-items>
+        <div class="grid" >
+            <div *ngFor="let product of items" class="col-12 sm:col-6 md:col-4 lg:col-3 card">
+                <div class="luxe-gift-card surface-card flex flex-column neon-card cursor-pointer"
+                    (click)="viewGiftDetail(product)">
+                    <div class="sparkles" aria-hidden="true"></div>
+                    <div class="surface-50 flex justify-content-center border-round position-relative gift-image-container"
+                        [ngClass]="{ 'gift-raffled': product.winnerId != null }">
+                        <!-- Logo watermark -->
+                        <img src="/logo.png" alt="לוגו" class="card-logo-watermark">
+
+                        <!-- Gift Spinner - Only during raffle -->
+                        <app-gift-spinner [isLoading]="loadingGiftIds.has(product.id)" [giftName]="product.name">
+                        </app-gift-spinner>
+
+                        <!-- Winner overlay for single winner -->
+                        <div *ngIf="product.winner" class="winner-overlay-subtle">
+                            <div class="winner-fancy-overlay">
+                                <div class="crown-emoji">👑</div>
+                                <div class="winner-name-big">{{ product.winner.name }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Winner overlay for multiple winners -->
+                        <!-- <div *ngIf="product.winnerId != null && product.amount > 1" class="winner-overlay">
+                            <div class="winner-content">
+                                <div class="winner-title">We Have Winners!</div>
+                                <i class="pi pi-trophy"></i>
+                            </div>
+                        </div> -->
+
+                        <div class="relative mx-auto">
+                            <img class="border-round w-full" [src]="product.image" [alt]="product.name" />
+                        </div>
+
+                    </div>
+                    <div class="pt-2">
+                        <div class="flex flex-row justify-content-between align-items-start gap-2 mb-2">
+                            <div class="flex-1">
+                                <span class="font-medium text-secondary text-xs">{{ product.category.name }}</span>
+                                <div class="text-base font-bold mt-1 text-900 line-clamp-2">{{ product.name }}</div>
+                            </div>
+                            <div class="surface-100 border-round-3xl p-1">
+                                <div
+                                    class="surface-0 flex align-items-center gap-1 py-1 px-1 shadow-1 border-round-3xl">
+                                    <i class="pi pi-users text-blue-500 text-xs"></i>
+                                    <span class="text-900 font-medium text-xs">{{product.buyersAmount }}</span>
+                                </div>
+                            </div>
+                            <div class="surface-100 border-round-3xl p-1">
+                                <div
+                                    class="surface-0 flex align-items-center gap-2 py-1 px-2 shadow-1 border-round-3xl">
+                                    <i class="pi pi-heart text-pink-500"></i>
+                                    <!-- <span class="text-900 font-medium text-xs">בנדיבות: {{ product.donor.name }}</span> -->
+
+                                    <span class="text-900 font-medium text-xs">{{ product.donor.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-1 mb-2">
+                            <!-- Buyer count badge -->
+                            <!-- <div class="surface-100 border-round-3xl p-1">
+                                <div
+                                    class="surface-0 flex align-items-center gap-1 py-1 px-1 shadow-1 border-round-3xl">
+                                    <i class="pi pi-users text-blue-500 text-xs"></i>
+                                    <span class="text-900 font-medium text-xs">{{product.buyersAmount }}</span>
+                                </div>
+                            </div> -->
+
+                            <div *ngIf="product.winnerId!=null" class="surface-100 border-round-3xl p-1">
+                                <div class="surface-0 flex align-items-center gap-1 py-2 px-2 shadow-1 border-round-3xl"
+                                    style="font-weight: 800; min-height: 32px;">
+                                    <span class="text-900 font-medium text-sm">הוגרל</span>
+                                    <i class="pi pi-check-circle text-pink-500" style="font-size: 1.1rem;"></i>
+                                </div>
+                            </div>
+
+                            <div *ngIf="product.amount>1" class="surface-100 border-round-3xl p-1">
+                                <div
+                                    class="surface-0 flex align-items-center gap-1 py-1 px-1 shadow-1 border-round-3xl">
+                                    <span class="text-900 font-medium text-xs">{{ product.amount }} זוכים</span>
+                                    <i class="pi pi-gift text-pink-500 text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-column gap-2 mt-2 pb-2">
+                            <span class="text-xl font-semibold text-primary">₪ {{ product.price}}</span>
+                            <div class="flex gap-1">
+                                <p-button *ngIf="!loggedIn || user?.role=='Buyer' && product.winnerId==null"
+                                    icon="pi pi-shopping-cart" label="הוספה" size="small" [disabled]="!loggedIn"
+                                    class="flex-1"
+                                    (click)="addToBasket(product.id); $event.stopPropagation()"></p-button>
+                                <p-button
+                                    *ngIf="loggedIn && user?.role=='Admin' && (product.winnerId==null || product.amount > 1)"
+                                    icon="pi pi-trophy" label="הגרל" size="small" [disabled]="!loggedIn" class="flex-1"
+                                    (click)="runLottery(product.id); $event.stopPropagation()"></p-button>
+                                <p-button *ngIf="loggedIn && user?.role=='Admin'"
+                                    (click)="showDrawer(product); $event.stopPropagation()" label="רוכשים"
+                                    icon="pi pi-arrow-left" size="small" />
+                                <p-button *ngIf="loggedIn && product.winnerId != null && product.amount === 1"
+                                    (click)="showWinners(product); $event.stopPropagation()" label="זוכה"
+                                    icon="pi pi-trophy" size="small" />
+                                <p-button *ngIf="loggedIn && product.winnerId != null && product.amount > 1"
+                                    (click)="showWinners(product); $event.stopPropagation()" label="זוכים"
+                                    icon="pi pi-trophy" size="small" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-dataview>
+
+<p-drawer [(visible)]="visible" header={{item?.name}}>
+    <div *ngIf="groupedBuyers.length==0" class="text-center text-secondary p-4"> עדיין לא רכשו מתנה זו </div>
+
+    <div *ngFor="let entry of groupedBuyers" class="mb-4">
+        <div class="buyer-card">
+            <div class="buyer-avatar-lg">{{ entry.buyer.name || 'U' | slice:0:2 }}</div>
+            <div class="buyer-details-drawer">
+                <div class="buyer-name-drawer">{{ entry.buyer.name }}</div>
+                <div class="buyer-username">@{{ entry.buyer.userName }}</div>
+                <div class="buyer-email text-sm">{{ entry.buyer.email }}</div>
+                <div class="buyer-phone text-sm">{{ entry.buyer.phone }}</div>
+            </div>
+            <div class="buyer-count-badge">{{ entry.count }}</div>
+        </div>
+    </div>
+</p-drawer>
+
+<p-drawer [(visible)]="visibleWinners" header="זוכים - {{item?.name}}">
+    <div *ngIf="groupedWinners.length==0" class="text-center text-secondary p-4"> אין זוכים </div>
+
+    <div *ngFor="let entry of groupedWinners" class="mb-4">
+        <div class="winner-card">
+            <div class="winner-avatar-crown">👑</div>
+            <div class="winner-avatar-lg">{{ (entry.buyer.name || '') | slice:0:2 }}</div>
+            <div class="buyer-details-drawer">
+                <div class="buyer-name-drawer">{{ entry.buyer.name }}</div>
+                <div class="buyer-username">@{{ entry.buyer.userName }}</div>
+                <div class="buyer-email text-sm">{{ entry.buyer.email }}</div>
+                <div class="buyer-phone text-sm">{{ entry.buyer.phone }}</div>
+            </div>
+            <div class="winner-count-badge">{{ entry.count }}</div>
+        </div>
+    </div>
+</p-drawer>
+</body>
+<p-toast></p-toast>

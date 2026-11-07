@@ -1,0 +1,155 @@
+<p-toast></p-toast>
+<body>
+<!-- Gift Spinner -->
+<app-gift-spinner [isLoading]="loadingLottery" [giftName]="gift?.name || 'מתנה'"></app-gift-spinner>
+
+<div class="gift-detail-container" *ngIf="!loading">
+  <div class="gift-detail-header">
+    <p-button icon="pi pi-arrow-left" [outlined]="true" [rounded]="true" (click)="goBack()" label="חזרה"></p-button>
+  </div>
+
+  <div *ngIf="gift" class="gift-detail-content">
+    <!-- Main Gift Card -->
+    <div class="gift-detail-grid">
+      <!-- Image Section -->
+      <div class="gift-image-column">
+        <div class="gift-image-section">
+          <div class="gift-image-wrapper">
+            <img [src]="gift.image" [alt]="gift.name" class="gift-image" />
+            <div *ngIf="gift.winnerId != null" class="winner-badge">
+              <i class="pi pi-check-circle"></i>
+              <span>הוגרל</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Section -->
+      <div class="gift-details-column">
+        <div class="gift-details-section">
+          <!-- Category & Name -->
+          <div class="gift-header">
+            <p-tag [value]="gift.category.name" severity="info"></p-tag>
+            <h1 class="gift-name">{{ gift.name }}</h1>
+          </div>
+
+          <!-- Description -->
+          <div *ngIf="gift.description" class="gift-description">
+            <p>{{ gift.description }}</p>
+          </div>
+
+          <!-- Donor Info -->
+          <div class="donor-info">
+            <div class="donor-label">תורם:</div>
+            <div class="donor-name">{{ gift.donor.name }}</div>
+          </div>
+
+          <!-- Price -->
+          <div class="gift-price-section">
+            <span class="gift-price">₪ {{ gift.price }}</span>
+          </div>
+
+          <!-- Stats -->
+          <div class="gift-stats">
+            <div class="stat-item">
+              <i class="pi pi-shopping-cart"></i>
+              <span>{{ purchaseLabel }}</span>
+            </div>
+            <div *ngIf="gift.winnerId != null" class="stat-item won">
+              <i class="pi pi-trophy"></i>
+              <span>יש זוכה</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="gift-actions">
+            <!-- Regular User Actions -->
+            <div *ngIf="!isAdmin" class="user-actions">
+              <p-button 
+                *ngIf="!gift.winnerId && loggedIn"
+                icon="pi pi-shopping-cart" 
+                label="הוספה לסל" 
+                (click)="addToBasket()"
+                class="action-button">
+              </p-button>
+              <p-button 
+                *ngIf="!gift.winnerId && !loggedIn"
+                icon="pi pi-shopping-cart" 
+                label="הוספה לסל" 
+                [disabled]="true"
+                class="action-button">
+              </p-button>
+            </div>
+
+            <!-- Admin Actions -->
+            <div *ngIf="isAdmin" class="admin-actions">
+              <p-button 
+                *ngIf="!gift.winnerId"
+                icon="pi pi-trophy" 
+                label="הגרל" 
+                (click)="runLottery()"
+                [disabled]="loadingLottery"
+                severity="help"
+                class="action-button">
+              </p-button>
+              <p-button 
+                icon="pi pi-arrow-left" 
+                label="רוכשים" 
+                (click)="showBuyers()"
+                class="action-button">
+              </p-button>
+              <p-button 
+                *ngIf="gift.winnerId"
+                icon="pi pi-trophy" 
+                label="זוכים" 
+                (click)="showWinners()"
+                class="action-button">
+              </p-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Buyers Drawer -->
+<p-drawer [(visible)]="buyersVisible" header="רוכשים - {{gift?.name}}">
+  <div *ngIf="buyers.length==0" class="text-center text-secondary p-4">
+    עדיין לא רכשו מתנה זו
+  </div>
+  
+  <div *ngFor="let entry of buyers" class="buyer-card mb-3">
+    <div class="buyer-avatar">{{ (entry?.buyer?.name || 'N/A') | slice:0:2 }}</div>
+    <div class="buyer-info">
+      <div class="buyer-name">{{ entry?.buyer?.name || 'Unknown' }}</div>
+      <div class="buyer-details" *ngIf="entry?.buyer?.userName">@{{ entry.buyer.userName }}</div>
+      <div class="buyer-details" *ngIf="entry?.buyer?.email">{{ entry.buyer.email }}</div>
+    </div>
+    <div class="buyer-badge">{{ entry?.count }}</div>
+  </div>
+</p-drawer>
+
+<!-- Winners Drawer -->
+<p-drawer [(visible)]="winnersVisible" header="זוכים - {{gift?.name}}">
+  <div *ngIf="winners.length==0" class="text-center text-secondary p-4">
+    אין זוכים
+  </div>
+  
+  <div *ngFor="let entry of winners" class="winner-card mb-3">
+    <div class="winner-crown">👑</div>
+    <div class="winner-avatar">{{ (entry?.buyer?.name || 'N/A') | slice:0:2 }}</div>
+    <div class="buyer-info">
+      <div class="buyer-name">{{ entry?.buyer?.name || 'Unknown' }}</div>
+      <div class="buyer-details" *ngIf="entry?.buyer?.userName">@{{ entry.buyer.userName }}</div>
+      <div class="buyer-details" *ngIf="entry?.buyer?.email">{{ entry.buyer.email }}</div>
+    </div>
+  </div>
+</p-drawer>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+  <i class="pi pi-spin pi-spinner"></i>
+  <p>טוען פרטים...</p>
+</div>
+</body>

@@ -1,0 +1,319 @@
+<body>
+<div class="payment-container">
+  <p-toast></p-toast>
+  
+  <div class="payment-wrapper">
+    <!-- Header -->
+    <div class="payment-header">
+      <h1 class="payment-title">Secure Payment</h1>
+      <p class="payment-subtitle">Complete your purchase securely</p>
+    </div>
+
+    <div class="payment-content">
+      <!-- Order Summary Card -->
+      <div class="order-summary-card">
+        <h3>Order Summary</h3>
+        <div class="summary-row">
+          <span>Total Amount:</span>
+          <span class="amount">${{ totalAmount | number:'1.2-2' }}</span>
+        </div>
+      </div>
+
+      <!-- Billing Information Section -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <i class="pi pi-user"></i> Billing Information
+        </h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input 
+              pInputText
+              id="fullName"
+              type="text"
+              [(ngModel)]="fullName"
+              placeholder="John Doe"
+              class="w-full"
+              [class.invalid]="fullName && !isValidEmail(email) && selectedPaymentMethod === 'card'"
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input 
+              pInputText
+              id="email"
+              type="email"
+              [(ngModel)]="email"
+              placeholder="john@example.com"
+              class="w-full"
+              [class.invalid]="email && !isValidEmail(email)"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input 
+              pInputText
+              id="phone"
+              type="tel"
+              [(ngModel)]="phone"
+              placeholder="+1 (555) 123-4567"
+              class="w-full"
+              [class.invalid]="phone && !isValidPhone(phone)"
+            />
+          </div>
+          <div class="form-group">
+            <label for="address">Street Address *</label>
+            <input 
+              pInputText
+              id="address"
+              type="text"
+              [(ngModel)]="address"
+              placeholder="123 Main Street"
+              class="w-full"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City *</label>
+            <input 
+              pInputText
+              id="city"
+              type="text"
+              [(ngModel)]="city"
+              placeholder="New York"
+              class="w-full"
+            />
+          </div>
+          <div class="form-group">
+            <label for="country">Country *</label>
+            <input 
+              pInputText
+              id="country"
+              type="text"
+              [(ngModel)]="country"
+              placeholder="United States"
+              class="w-full"
+            />
+          </div>
+          <div class="form-group">
+            <label for="postalCode">Postal Code *</label>
+            <input 
+              pInputText
+              id="postalCode"
+              type="text"
+              [(ngModel)]="postalCode"
+              placeholder="10001"
+              class="w-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div class="form-section">
+        <h2 class="section-title">
+          <i class="pi pi-wallet"></i> Payment Method
+        </h2>
+
+        <div class="payment-methods">
+          <!-- Credit Card Option -->
+          <label class="payment-method-option" [class.active]="selectedPaymentMethod === 'card'">
+            <input 
+              type="radio" 
+              [value]="'card'" 
+              [(ngModel)]="selectedPaymentMethod"
+              name="paymentMethod"
+            />
+            <div class="method-content">
+              <i class="pi pi-credit-card"></i>
+              <div class="method-info">
+                <h3>Credit Card</h3>
+                <p>Visa, Mastercard, American Express</p>
+              </div>
+            </div>
+          </label>
+
+          <!-- PayPal Option -->
+          <label class="payment-method-option" [class.active]="selectedPaymentMethod === 'paypal'">
+            <input 
+              type="radio" 
+              [value]="'paypal'" 
+              [(ngModel)]="selectedPaymentMethod"
+              name="paymentMethod"
+            />
+            <div class="method-content">
+              <i class="pi pi-paypal"></i>
+              <div class="method-info">
+                <h3>PayPal</h3>
+                <p>Fast and secure PayPal checkout</p>
+              </div>
+            </div>
+          </label>
+
+          <!-- Google Pay Option -->
+          <label class="payment-method-option" [class.active]="selectedPaymentMethod === 'googlepay'">
+            <input 
+              type="radio" 
+              [value]="'googlepay'" 
+              [(ngModel)]="selectedPaymentMethod"
+              name="paymentMethod"
+            />
+            <div class="method-content">
+              <i class="pi pi-google"></i>
+              <div class="method-info">
+                <h3>Google Pay</h3>
+                <p>One-tap payment with Google Pay</p>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Credit Card Details (Only shown when card is selected) -->
+      <div class="form-section" *ngIf="showCardDetails()">
+        <h2 class="section-title">
+          <i class="pi pi-credit-card"></i> Card Details
+        </h2>
+
+        <div class="form-group">
+          <label for="cardNumber">Card Number *</label>
+          <div class="card-input-wrapper">
+            <input 
+              pInputText
+              id="cardNumber"
+              type="text"
+              [(ngModel)]="cardNumber"
+              (input)="formatCardNumber($event)"
+              placeholder="1234 5678 9012 3456"
+              maxlength="19"
+              class="w-full"
+              [class.invalid]="cardNumber && !isValidCardNumber(cardNumber)"
+            />
+            <span class="card-type" *ngIf="cardNumber">{{ getCardType() }}</span>
+          </div>
+          <small class="error-text" *ngIf="cardNumber && !isValidCardNumber(cardNumber)">
+            <i class="pi pi-exclamation-circle"></i> Invalid card number
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label for="cardholderName">Cardholder Name *</label>
+          <input 
+            pInputText
+            id="cardholderName"
+            type="text"
+            [(ngModel)]="cardholderName"
+            placeholder="John Doe"
+            class="w-full"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="expiryDate">Expiry Date (MM/YY) *</label>
+            <input 
+              pInputText
+              id="expiryDate"
+              type="text"
+              [(ngModel)]="expiryDate"
+              (input)="formatExpiryDate($event)"
+              placeholder="MM/YY"
+              maxlength="5"
+              class="w-full"
+              [class.invalid]="expiryDate && !isValidExpiryDate(expiryDate)"
+            />
+            <small class="error-text" *ngIf="expiryDate && !isValidExpiryDate(expiryDate)">
+              <i class="pi pi-exclamation-circle"></i> Invalid or expired date
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="cvv">CVV *</label>
+            <div class="cvv-input-wrapper">
+              <input 
+                pInputText
+                id="cvv"
+                type="password"
+                [(ngModel)]="cvv"
+                (input)="formatCVV($event)"
+                placeholder="123"
+                maxlength="4"
+                class="w-full"
+                [class.invalid]="cvv && !isValidCVV(cvv)"
+              />
+              <span class="cvv-help" title="3-4 digit security code on back of card">
+                <i class="pi pi-question-circle"></i>
+              </span>
+            </div>
+            <small class="error-text" *ngIf="cvv && !isValidCVV(cvv)">
+              <i class="pi pi-exclamation-circle"></i> 3-4 digits required
+            </small>
+          </div>
+        </div>
+
+        <!-- Security Info -->
+        <div class="security-info">
+          <i class="pi pi-shield"></i>
+          <span>Your card information is encrypted and secure</span>
+        </div>
+      </div>
+
+      <!-- Payment Buttons -->
+      <div class="payment-actions">
+        <p-button 
+          label="Cancel"
+          icon="pi pi-times"
+          severity="secondary"
+          (click)="cancelPayment()"
+          [disabled]="isProcessing"
+          class="cancel-btn"
+        ></p-button>
+
+        <!-- Enhanced Payment Button -->
+        <div class="pay-button-wrapper" [class.valid]="isFormValid()">
+          <p-button 
+            [label]="isProcessing ? 'Processing Payment...' : 'Pay $' + (totalAmount | number:'1.2-2')"
+            [icon]="isProcessing ? 'pi pi-spin pi-spinner' : 'pi pi-lock'"
+            severity="success"
+            (click)="processPayment()"
+            [disabled]="!isFormValid() || isProcessing"
+            [loading]="isProcessing"
+            class="pay-btn"
+            [ngClass]="{'enabled': isFormValid(), 'processing': isProcessing}"
+          ></p-button>
+          
+          <!-- Visual Indicator: Form Status -->
+          <div class="form-status-indicator" *ngIf="!isProcessing">
+            <span class="status-text" [ngClass]="{'valid': isFormValid(), 'invalid': !isFormValid()}">
+              <i [ngClass]="isFormValid() ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"></i>
+              {{ isFormValid() ? 'Ready to pay' : 'Complete form to proceed' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="trust-badges">
+        <div class="badge">
+          <i class="pi pi-shield"></i>
+          <span >Secure Payment</span>
+        </div>
+        <div class="badge">
+          <i class="pi pi-lock"></i>
+          <span>SSL Encrypted</span>
+        </div>
+        <div class="badge">
+          <i class="pi pi-verified"></i>
+          <span>PCI Compliant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>

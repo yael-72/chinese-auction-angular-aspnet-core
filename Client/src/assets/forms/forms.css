@@ -1,0 +1,137 @@
+/* עיצוב מודרני לטפסים - שימושי כ-global או כהיטמעדות component */
+:root{
+  --bg:#f6f8fa;
+  --card:#ffffff;
+  --primary:#2563eb;
+  --accent:#06b6d4;
+  --muted:#6b7280;
+  --error:#ef4444;
+  --radius:12px;
+  --shadow: 0 6px 20px rgba(20,24,40,0.08);
+  --gap:16px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.form-card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), var(--card));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  max-width: 720px;
+  margin: 24px auto;
+  border: 1px solid rgba(16,24,40,0.04);
+}
+
+.form-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap);
+}
+@media (max-width:720px){ .form-grid{ grid-template-columns: 1fr; } }
+
+.form-field{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label{
+  font-size: 13px;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap:8px;
+}
+
+/* floating style wrapper */
+.input-wrap{
+  position: relative;
+}
+.input{
+  width:100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(16,24,40,0.08);
+  background: linear-gradient(180deg,#fff,#fbfdff);
+  font-size: 15px;
+  color: #0f172a;
+  outline: none;
+  transition: box-shadow .15s, border-color .15s, transform .06s;
+  box-shadow: inset 0 -1px 0 rgba(16,24,40,0.02);
+}
+.input:focus{
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.12);
+  transform: translateY(-1px);
+}
+
+/* small helper text and errors */
+.hint{
+  font-size: 12px;
+  color: var(--muted);
+}
+.error{
+  font-size: 12px;
+  color: var(--error);
+}
+
+/* textarea, select */
+.textarea{
+  min-height: 120px;
+  resize: vertical;
+}
+.select{
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+
+/* action row */
+.form-actions{
+  display:flex;
+  gap:12px;
+  margin-top:18px;
+  justify-content:flex-end;
+  align-items:center;
+}
+.btn{
+  padding:10px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+.btn-primary{
+  background: linear-gradient(90deg,var(--primary), #3b82f6);
+  color: white;
+  box-shadow: 0 8px 28px rgba(37,99,235,0.12);
+}
+.btn-ghost{
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(16,24,40,0.06);
+}
+
+/* compact helpers */
+.row{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.field-inline{ flex:1; }
+
+/* subtle input icons */
+.input-icon{
+  position:absolute;
+  right:10px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:14px;
+  color:var(--muted);
+  pointer-events:none;
+}

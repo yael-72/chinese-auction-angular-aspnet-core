@@ -1,0 +1,152 @@
+<body>
+<div class="basket-container">
+    <!-- Shopping Cart Section -->
+    <div class="cart-section" *ngIf="list$.length > 0">
+        <div class="section-header">
+            <div class="header-content">
+                <i class="pi pi-shopping-cart header-icon"></i>
+                <h2>מוצרים בעגלה</h2>
+                <span class="item-count">{{ list$.length }} מוצרים</span>
+            </div>
+        </div>
+
+        <div class="select-all-bar">
+            <p-checkbox 
+                [(ngModel)]="allSelected" 
+                [binary]="true" 
+                (change)="toggleAll()" 
+                inputId="all">
+            </p-checkbox>
+            <label for="all" class="select-label">בחר הכל</label>
+        </div>
+
+        <div class="items-container">
+            <div class="cart-item" *ngFor="let item of list$; let first = first">
+                <div class="item-checkbox">
+                    <p-checkbox 
+                        [(ngModel)]="current"
+                        [value]="item"
+                        (change)="onItemChange(list$)">
+                    </p-checkbox>
+                </div>
+
+                <div class="item-image">
+                    <img [src]="item.gift.image" [alt]="item.gift.name" />
+                </div>
+
+                <div class="item-details">
+                    <div class="category-badge">{{ item.gift.category }}</div>
+                    <h3 class="item-name">{{ item.gift.name }}</h3>
+                    <div class="price-per-unit">₪ {{ item.gift.price }}</div>
+                </div>
+
+                <div class="item-controls">
+                    <p-inputNumber 
+                        (onInput)="changeAmount(item.id,item.amount)" 
+                        [(ngModel)]="item.amount" 
+                        [showButtons]="true" 
+                        buttonLayout="horizontal" 
+                        spinnerMode="horizontal" 
+                        [inputStyle]="{ width: '4rem' }">
+                        <ng-template #incrementbuttonicon>
+                            <span class="pi pi-plus"></span>
+                        </ng-template>
+                        <ng-template #decrementbuttonicon>
+                            <span class="pi pi-minus"></span>
+                        </ng-template>
+                    </p-inputNumber>
+                </div>
+
+                <div class="item-total">
+                    <span class="total-price">₪ {{ item.gift.price * item.amount }}</span>
+                </div>
+
+                <div class="item-actions">
+                    <p-confirmpopup />
+                    <p-button 
+                        icon="pi pi-trash" 
+                        [outlined]="true" 
+                        [rounded]="true" 
+                        severity="danger" 
+                        (click)="delete($event,item.id)"
+                        styleClass="delete-btn">
+                    </p-button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+            <div class="summary-content">
+                <div class="summary-item">
+                    <span class="summary-label">סה"כ פריטים:</span>
+                    <span class="summary-value">{{ current.length }}</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-item">
+                    <span class="summary-label">סה"כ לתשלום:</span>
+                    <span class="summary-total">₪ {{ total }}</span>
+                </div>
+            </div>
+            <p-button 
+                label="המשך לתשלום" 
+                [raised]="true" 
+                (click)="proceedToPayment()" 
+                [disabled]="current.length==0"
+                icon="pi pi-credit-card"
+                styleClass="checkout-btn">
+            </p-button>
+        </div>
+    </div>
+
+    <!-- Empty Cart Message -->
+    <div class="empty-state" *ngIf="list$.length === 0">
+        <i class="pi pi-shopping-cart"></i>
+        <h3>העגלה שלך ריקה</h3>
+        <p>אין עדיין מוצרים בעגלה</p>
+    </div>
+
+    <!-- Purchase History Section -->
+    <div class="history-section" *ngIf="paid.length > 0">
+        <div class="section-header">
+            <div class="header-content">
+                <i class="pi pi-history header-icon"></i>
+                <h2>היסטוריית רכישות</h2>
+                <span class="item-count">{{ getSortedDateTimeKeys().length }} רכישות</span>
+            </div>
+        </div>
+
+        <div class="history-items">
+            <div *ngFor="let dateTime of getSortedDateTimeKeys()" class="history-date-group">
+                <div class="date-header">
+                    <i class="pi pi-calendar"></i>
+                    <h3>{{ dateTime }}</h3>
+                </div>
+                
+                <div class="items-grid">
+                    <div class="history-item" *ngFor="let item of groupedPaidTickets.get(dateTime)">
+                        <div class="history-item-image">
+                            <img [src]="item.gift.image" [alt]="item.gift.name" />
+                            <div class="quantity-badge">x{{ item.amount }}</div>
+                        </div>
+
+                        <div class="history-item-info">
+                            <div class="category-badge-history">{{ item.gift.category }}</div>
+                            <h4 class="history-item-name">{{ item.gift.name }}</h4>
+                            <div class="price-info">
+                                <span class="unit-price">₪ {{ item.gift.price }} ליחידה</span>
+                            </div>
+                        </div>
+
+                        <div class="history-item-summary">
+                            <span class="history-total">₪ {{ item.gift.price * item.amount }}</span>
+                            <div class="status-badge">✓ שולם</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<p-toast></p-toast>

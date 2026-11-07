@@ -1,0 +1,252 @@
+.gift-spinner-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  border-radius: 0;
+  z-index: 10;
+
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.spinner-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Center spinner with rings
+.center-spinner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid transparent;
+  border-top: 4px solid #D4AF37;
+  border-right: 4px solid #F4E4C1;
+  border-radius: 50%;
+  animation: spin-ring 2s linear infinite;
+  opacity: 1;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.spinner-ring-2 {
+  position: absolute;
+  width: 85%;
+  height: 85%;
+  border: 3px solid transparent;
+  border-bottom: 3px solid #B8860B;
+  border-left: 3px solid #A67C52;
+  border-radius: 50%;
+  animation: spin-ring-reverse 3s linear infinite;
+  opacity: 1;
+}
+
+.center-dot {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #D4AF37, #F4E4C1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1A1A1A;
+  font-size: 24px;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.5), 0 0 40px rgba(212, 175, 55, 0.2);
+  animation: pulse-center 1.5s ease-in-out infinite;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+
+  i {
+    animation: rotate-star 4s linear infinite;
+  }
+}
+
+// Orbiting gift icons
+.orbit-item {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1A1A1A;
+  font-size: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #D4AF37, #F4E4C1);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+  animation: orbit 6s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.orbit-1 {
+  animation: orbit 6s linear infinite 0s;
+  transform: translateX(65px);
+}
+
+.orbit-2 {
+  animation: orbit 6s linear infinite 1.5s;
+  transform: translateX(-65px);
+}
+
+.orbit-3 {
+  animation: orbit 6s linear infinite 3s;
+  transform: translateY(-65px);
+}
+
+.orbit-4 {
+  animation: orbit 6s linear infinite 4.5s;
+  transform: translateY(65px);
+}
+
+// Loading text
+.spinner-text {
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #D4AF37;
+  animation: fade-pulse 2s ease-in-out infinite;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+  letter-spacing: 1px;
+}
+
+// Animations
+@keyframes spin-ring {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-ring-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(55px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(55px) rotate(-360deg);
+  }
+}
+
+@keyframes pulse-center {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.6), 0 0 30px rgba(249, 115, 22, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 40px rgba(249, 115, 22, 0.5);
+  }
+}
+
+@keyframes rotate-star {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes wobble {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  15% {
+    transform: translateX(-8px) rotate(-2deg);
+  }
+  30% {
+    transform: translateX(8px) rotate(2deg);
+  }
+  45% {
+    transform: translateX(-6px) rotate(-1.5deg);
+  }
+  60% {
+    transform: translateX(6px) rotate(1.5deg);
+  }
+  75% {
+    transform: translateX(-4px) rotate(-1deg);
+  }
+  90% {
+    transform: translateX(4px) rotate(1deg);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .spinner-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .orbit-item {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
+
+  .orbit-1 {
+    transform: translateX(50px);
+  }
+
+  .orbit-2 {
+    transform: translateX(-50px);
+  }
+
+  .orbit-3 {
+    transform: translateY(-50px);
+  }
+
+  .orbit-4 {
+    transform: translateY(50px);
+  }
+
+  .center-dot {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+}

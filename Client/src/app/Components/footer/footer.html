@@ -1,0 +1,74 @@
+<footer class="luxury-footer">
+  <div class="footer-content">
+    <!-- Main Footer Section -->
+    <div class="footer-main">
+      <!-- Logo & Brand Section -->
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="/logo.png" alt="Yaeli Logo" class="logo-image" />
+          <h3 class="brand-name">Yaeli & Sari</h3>
+        </div>
+        <p class="brand-description">
+          Bringing together generosity and joy through meaningful gifts.
+        </p>
+        <!-- Social Links -->
+        <div class="social-links">
+          <a *ngFor="let social of socialLinks" 
+             [href]="social.url" 
+             [title]="social.name"
+             class="social-link">
+            <i [ngClass]="social.icon"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Divider 1 -->
+      <div class="footer-divider-vertical"></div>
+
+      <!-- Footer Links Sections -->
+      <div class="footer-links-container">
+        <div *ngFor="let section of footerLinks" class="footer-link-section">
+          <h4 class="section-title">{{ section.title }}</h4>
+          <ul class="link-list">
+            <li *ngFor="let link of section.links">
+              <a [href]="link.url" class="footer-link">{{ link.label }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Divider 2 -->
+      <div class="footer-divider-vertical"></div>
+
+      <!-- Newsletter Section -->
+      <div class="footer-newsletter">
+        <h4 class="section-title">Newsletter</h4>
+        <p class="newsletter-text">Subscribe to get updates on new gifts and special offers</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Enter your email" class="newsletter-input" />
+          <button class="newsletter-button">
+            <i class="pi pi-send"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom Section -->
+    <div class="footer-bottom">
+      <div class="footer-divider"></div>
+      <div class="footer-bottom-content">
+        <p class="copyright">
+          &copy; {{ currentYear }} Yaeli. All rights reserved. Crafted with 
+          <i class="pi pi-heart-fill"></i> for charity.
+        </p>
+        <div class="footer-credits">
+          <span>Developed with love & luxury design</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative elements -->
+  <div class="footer-decoration footer-decoration-left"></div>
+  <div class="footer-decoration footer-decoration-right"></div>
+</footer>

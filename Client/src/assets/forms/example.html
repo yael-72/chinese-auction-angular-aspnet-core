@@ -1,0 +1,49 @@
+<!-- הדביקו את ה-HTML הזה לתוך component/template והוסיפו קישור ל-forms.css -->
+<link rel="stylesheet" href="assets/forms/forms.css" />
+
+<div class="form-card">
+  <form>
+    <div class="form-grid">
+      <div class="form-field">
+        <label class="label">שם פרטי</label>
+        <div class="input-wrap">
+          <input class="input" type="text" placeholder="יוסף" />
+        </div>
+        <div class="hint">שם כפי שיופיע בכרטיס המשתמש</div>
+      </div>
+
+      <div class="form-field">
+        <label class="label">דואר אלקטרוני</label>
+        <div class="input-wrap">
+          <input class="input" type="email" placeholder="you@example.com" />
+          <span class="input-icon">@</span>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="label">תפקיד</label>
+        <select class="input select">
+          <option>מנהל</option>
+          <option>עובד</option>
+          <option>אורח</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label class="label">טלפון</label>
+        <input class="input" type="tel" placeholder="+972 50 1234567" />
+      </div>
+
+      <div class="form-field" style="grid-column:1 / -1">
+        <label class="label">הערות</label>
+        <textarea class="input textarea" placeholder="הערות נוספות..."></textarea>
+        <div class="error" style="display:none">שגיאה: שדה חובה</div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost">ביטול</button>
+      <button type="submit" class="btn btn-primary">שמור</button>
+    </div>
+  </form>
+</div>

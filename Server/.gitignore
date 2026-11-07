@@ -1,0 +1,16 @@
+# Build output
+**/bin/
+**/obj/
+**/TestResults/
+**/publish/
+
+# Visual Studio and IDE files
+.vs/
+.idea/
+*.user
+*.suo
+*.sln.docstates
+
+# Runtime logs
+**/request_logs.txt
+*.log

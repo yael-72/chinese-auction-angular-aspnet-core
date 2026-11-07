@@ -1,0 +1,29 @@
+<p-toast></p-toast>
+<div class="login-container">
+  <div class="login-box">
+    <h1>ברוכים הבאים</h1>
+    <div class="subtitle">הזן את הפרטים שלך כדי להמשיך</div>
+ <form [formGroup]="loginFrm">
+    <div class="form-group">
+      <label for="username">שם משתמש</label>
+      <input id="username" type="text" placeholder="הזן את שם המשתמש שלך" formControlName="userName"/>
+      <p *ngIf="f['userName'].invalid && (f['userName'].dirty || f['userName'].touched)" class="error-input">שדה חובה</p>
+    </div>
+
+    <div class="form-group">
+      <label for="password">סיסמה</label>
+      <input id="password" type="password" placeholder="הזן את הסיסמה שלך" formControlName="password" />
+      <p *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)" class="error-input">שדה חובה</p>
+    </div>
+   
+    <p-button [disabled]="loginFrm.invalid" label="התחבר" icon="pi pi-arrow-right" styleClass="gold-btn" (click)="login()"></p-button>
+ 
+    <div class="or-divider">
+      <b>או</b>
+    </div>
+
+    <p-button label="הירשם" icon="pi pi-user-plus" styleClass="gold-btn" (click)="moveToRegister()"></p-button>
+    </form>
+  </div>
+
+</div>
